@@ -1,0 +1,8 @@
+email = "email@email.com"
+firstName = "First"
+lastName = "Last"
+address1 = "123 Fakestreet"
+address2 = "Apt 123"
+city = "Anytown"
+zip = "90210"
+phone = "5555555555"
