@@ -1,40 +1,53 @@
 import requests
-import json
 from selenium import webdriver
 import shipping
 import os
 
-## Shopify API Call and Parsing Json
 # Set the handle and size you want (should be predictable)
 handle = 'womens-sweatpants-gravel'
 size = 'S'
-r = requests.get('https://yeezysupply.com/products.json')
-products = json.loads((r.text))['products']
+json_url = 'https://yeezysupply.com/products.json'
+base_cart_url = 'https://yeezysupply.com/cart/'
 
-# Function to parse and find the correct ID to add to cart.
-def getProduct():
-    for product in products:
-        productParse = product
-        productHandle = product['handle']
-        if productHandle == handle:
-            variants = product['variants']
-            for variant in variants:
-                id = variant['id']
-                option = variant['option1']
-                if size == option:
-                    return (id)
 
-# Call Function to get correct ID.
-correctProduct = getProduct()
+# Function to request the JSON and find variants for matching handle
+def get_product_variants (url, handle):
+        resp = requests.get(url).json()['products']
+        for r in resp:
+            if r['handle'] == handle:
+                variants = r['variants']
+                return variants
 
-# Generate Cart URL.
-productURL = "http://yeezysupply.com/cart/{}:1?checkout[email]={}&checkout[shipping_address][first_name]={}&checkout[shipping_address][last_name]={}&checkout[shipping_address][address1]={}&checkout[shipping_address][address2]={}&checkout[shipping_address][city]={}&checkout[shipping_address][zip]={}&checkout[shipping_address][phone]={}".format(correctProduct, shipping.email,shipping.firstName,shipping.lastName,shipping.address1,shipping.address2,shipping.city,shipping.zip,shipping.phone)
 
-## Selenium
-# Set Driver Path
-driverPath = os.path.join(os.getcwd(), 'chromedriver76.exe')
-driver = webdriver.Chrome(driverPath)
+# Get correct ID for corresponding variant.
+def find_id(variants, size):
+    for var in variants:
+        if var['option1'] == size:
+            return var['id']
 
-# Open Page
-driver.get(productURL)
-driver.find_element_by_xpath("//*[@id="salesFinal"]").click()
+
+# Generate Permalink
+def generate_cart_url (base_url, id):
+    product_url = base_url + str(id) + ':1' + shipping.email
+    permalink = '&checkout'.join([product_url,
+                            shipping.first_name,
+                            shipping.last_name,
+                            shipping.address1,
+                            shipping.address2,
+                            shipping.city,
+                            shipping.zip,
+                            shipping.phone])
+    return permalink
+
+
+# Main Function
+def main():
+    product = get_product_variants (json_url, handle)
+    get_id = find_id (product, size)
+    return generate_cart_url(base_cart_url, get_id)
+
+
+# Selenium to open Permalink URL
+driver_path = os.path.join(os.getcwd(), 'chromedriver76.exe')
+driver = webdriver.Chrome(driver_path)
+driver.get(main())
