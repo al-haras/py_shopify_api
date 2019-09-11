@@ -26,4 +26,4 @@ library)
 - Add more logic to actively request the API for a list and retry if not 
 found.
 - Move Selenium into a separate function to make it more modular and add to main(). It is currently closing after function completes. Leaving out of main() for now.
-
+- Add a proper requirements.txt for pip
