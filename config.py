@@ -2,7 +2,7 @@
 handle = 'womens-sweatpants-gravel'
 size = 'S'
 
-# Update URL to desired Shopify store as base_url
+# Update URL to desired Shopify store as store_url
 store_url = 'https://yeezysupply.com/'
 json = store_url + 'products.json'
 cart = store_url + 'cart/'
