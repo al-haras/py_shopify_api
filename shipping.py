@@ -1,8 +1,0 @@
-email = "?checkout[email]=email@email.com"
-first_name = "[shipping_address][first_name]=First"
-last_name = "[shipping_address][last_name]=Last"
-address1 = "[shipping_address][address1]=123 Fake Street"
-address2 = "[shipping_address][address2]=Apt 1234"
-city = "[shipping_address][city]=Anywhere"
-zip = "[shipping_address][zip]=90210"
-phone = "[shipping_address][phone]=5555555555"
